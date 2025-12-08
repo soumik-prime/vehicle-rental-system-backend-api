@@ -1,10 +1,18 @@
 import express, { Request, Response } from "express";
 import logger from "./middlewares/logger";
+import { initDB } from "./config/db";
+import { authRoutes } from "./modules/auth/auth.routes";
 
 const app = express();
-app.use(express.json());
+initDB();
 
-app.use(logger, (req: Request, res: Response) => {
+app.use(express.json());
+app.use(logger);
+app.use("/api/v1/auth", authRoutes);
+
+
+
+app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,
     message: "Route not found",
