@@ -37,6 +37,40 @@ const signinUser = async (req: Request, res: Response) => {
   }
 };
 
+const signupUser = async (req: Request, res: Response) => {
+  try{
+    const result = await authServices.signupUser(req.body);
+
+    if (!result) {
+      return res.status(400).json({
+        success: false,
+        message: "Unable to create an user!",
+      });
+    }
+
+    const { password, ...user } = result;
+
+    res.status(201).json(
+      {
+        success: true,
+        message: "User registered successfully",
+        data: user
+      }
+    )
+  }
+  catch(err: any){
+    res.status(500).json(
+      {
+        success: false,
+        message: err.message,
+        errors: err
+      }
+    )
+  }
+}
+
+
 export const authControllers = {
   signinUser,
+  signupUser
 };

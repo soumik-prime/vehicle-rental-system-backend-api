@@ -37,6 +37,17 @@ const signinUser = async (email: string, password: string) => {
   return {token, user: authUser};
 };
 
+const signupUser = async (Payload: Record<string, any>) => {
+  const { name, email, password, phone, role } = Payload;
+  const hashedpassword = await bcrypt.hash(password, 10);
+  const result = await pool.query(
+    `INSERT INTO users(name, email, password, phone, role) VALUES($1, $2, $3, $4, $5) RETURNING *`,
+    [ name, email, hashedpassword, phone, role ]
+  );
+  return result.rows[0];
+}
+
 export const authServices = {
-  signinUser
+  signinUser,
+  signupUser
 }
