@@ -18,6 +18,7 @@ const signinUser = async (email: string, password: string) => {
   const secret = envVariable.jwt_secrate as string;
   const token = jwt.sign(
     {
+      id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,

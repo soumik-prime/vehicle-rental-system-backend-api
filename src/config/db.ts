@@ -24,9 +24,9 @@ export const initDB = async() => {
         `CREATE TABLE IF NOT EXISTS vehicles(
         id SERIAL PRIMARY KEY,
         vehicle_name VARCHAR(150),
-        type VARCHAR(5) NOT NULL,
+        type VARCHAR(15) NOT NULL,
         registration_number VARCHAR(50) UNIQUE NOT NULL,
-        daily_rent_price VARCHAR(15) NOT NULL,
+        daily_rent_price NUMERIC(10,2) NOT NULL,
         availability_status VARCHAR(15)
         );`
     );
@@ -36,9 +36,9 @@ export const initDB = async() => {
         id SERIAL PRIMARY KEY,
         customer_id INT REFERENCES users(id) ON DELETE CASCADE,
         vehicle_id INT REFERENCES vehicles(id) ON DELETE CASCADE,
-        rent_start_date TIMESTAMP DEFAULT NOW(),
-        rent_end_date TIMESTAMP NOT NULL,
-        total_price VARCHAR(15) NOT NULL,
+        rent_start_date DATE DEFAULT CURRENT_DATE,
+        rent_end_date DATE NOT NULL,
+        total_price NUMERIC(10,2) NOT NULL,
         status VARCHAR(15) NOT NULL
         );`
     );
