@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import logger from "./middlewares/logger";
 import { initDB } from "./config/db";
 import { authRoutes } from "./modules/auth/auth.routes";
+import { vehiclesRoutes } from "./modules/vehicles/vehicles.routes";
+import { userRoutes } from "./modules/users/users.routes";
 
 const app = express();
 initDB();
@@ -9,6 +11,8 @@ initDB();
 app.use(express.json());
 app.use(logger);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/vehicles", vehiclesRoutes);
+app.use("/api/v1/users", userRoutes);
 
 
 
