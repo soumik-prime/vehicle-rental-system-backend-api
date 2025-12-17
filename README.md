@@ -245,6 +245,7 @@ vehicle-rental-system-backend-api/
 │   │   └── env.ts                  # Environment variables configuration
 │   ├── middlewares/
 │   │   ├── auth.ts                 # JWT authentication middleware
+│   │   ├── autoReturn.ts           # Auto-return middleware for expired bookings
 │   │   ├── logger.ts               # Request logging middleware
 │   │   └── ownerOrAdmin.ts         # Owner/Admin authorization middleware
 │   ├── modules/
@@ -269,9 +270,12 @@ vehicle-rental-system-backend-api/
 │       │   └── enum.ts             # User role enums
 │       └── express/
 │           └── index.d.ts          # Express type extensions
-├── package.json
-├── tsconfig.json
-└── README.md
+├── .env                            # Environment variables (not in git)
+├── .gitignore                      # Git ignore file
+├── package.json                    # Project dependencies and scripts
+├── package-lock.json               # Dependency lock file
+├── tsconfig.json                   # TypeScript configuration
+└── README.md                       # Project documentation
 ```
 
 ## 🏃 Running the Application
