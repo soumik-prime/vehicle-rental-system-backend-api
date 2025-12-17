@@ -19,7 +19,39 @@ const putUserbyId = async(Payload: Record<string, any> , id:string) => {
   return result;
 }
 
+const deleteUserById = async(id: string) => {
+  const result = await pool.query(
+    `
+    DELETE FROM users
+    WHERE id = $1
+    RETURNING *
+    `,
+    [
+      id
+    ]
+  );
+  return result;
+}
+
+const getActiveBookingByCustomerId = async(customer_id: string) => {
+  const result = await pool.query(
+    `
+    SELECT *
+    FROM bookings
+    WHERE customer_id = $1
+      AND status = $2
+    `,
+    [
+      customer_id,
+      "active"
+    ]
+  )
+  return result;
+}
+
 export const usersService = {
   getAllUser,
-  putUserbyId
+  putUserbyId,
+  getActiveBookingByCustomerId,
+  deleteUserById
 }

@@ -14,6 +14,7 @@ const createBooking = async (Payload: Record<string, any>, status: string) => {
       $5
     FROM vehicles v
     WHERE v.id = $2
+      AND v.availability_status = 'available'
     RETURNING *
     `,
     [customer_id, vehicle_id, rent_start_date, rent_end_date, status]
@@ -108,11 +109,27 @@ const updateBookingStatus = async (booking_id: string, status: string) => {
   return result.rows[0];
 };
 
+const updateVehicleAvailStatus = async(vehicle_id: string, availability_status: string) => {
+  const result = await pool.query(
+    `
+    UPDATE vehicles
+    SET availability_status = $1
+    WHERE id = $2
+    RETURNING *
+    `,
+    [
+      availability_status,
+      vehicle_id
+    ]
+  )
+  return result.rows[0];
+}
 
 export const bookingsService = {
   createBooking,
   getBookingById,
   getAllBookings,
   getBookingsByCustomerId,
-  updateBookingStatus
+  updateBookingStatus,
+  updateVehicleAvailStatus
 };

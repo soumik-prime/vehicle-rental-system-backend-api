@@ -8,7 +8,7 @@ const createVehicle = async(Payload: Record<string, any>) => {
     VALUES($1, $2, $3, $4, $5) RETURNING *`,
     [ vehicle_name, type, registration_number, daily_rent_price, availability_status ]
   );
-  return result.rows[0];
+  return result;
 }
 
 const getVehicles = async() => {
@@ -38,11 +38,26 @@ const putVehicleById = async(Payload: Record<string, any>, id: string) => {
   return result;
 }
 
-
+const deleteVehicleById = async(id: string) => {
+  const result = await pool.query(
+    `
+    DELETE FROM vehicles
+    WHERE id = $1
+      AND availability_status <> $2
+    RETURNING *
+    `,
+    [
+      id,
+      "booked"
+    ]
+  );
+  return result;
+}
 
 export const vehiclesService = {
   createVehicle,
   getVehicles,
   getVehicleById,
-  putVehicleById
+  putVehicleById,
+  deleteVehicleById
 }

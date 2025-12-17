@@ -5,12 +5,14 @@ import { authRoutes } from "./modules/auth/auth.routes";
 import { vehiclesRoutes } from "./modules/vehicles/vehicles.routes";
 import { userRoutes } from "./modules/users/users.routes";
 import { bookingsRoutes } from "./modules/bookings/bookings.routes";
+import { autoReturn } from "./middlewares/autoReturn";
 
 const app = express();
 initDB();
 
 app.use(express.json());
-app.use(logger);
+app.use(autoReturn);
+// app.use(logger);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/vehicles", vehiclesRoutes);
 app.use("/api/v1/users", userRoutes);

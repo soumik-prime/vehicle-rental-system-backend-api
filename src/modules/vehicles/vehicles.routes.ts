@@ -9,6 +9,7 @@ router.post("/", auth(userRole.ADMIN), vehiclesController.createVehicle);
 router.get("/", vehiclesController.getVehicles);
 router.get("/:vehicleId", vehiclesController.getVehicleById);
 router.put("/:vehicleId", auth(userRole.ADMIN), vehiclesController.putVehicleById);
+router.delete("/:vehicleId", auth(userRole.ADMIN), vehiclesController.deleteVehicleById)
 // router.put("/:vehicleId", auth(userRole.ADMIN), ___);
 
 export const vehiclesRoutes = router;

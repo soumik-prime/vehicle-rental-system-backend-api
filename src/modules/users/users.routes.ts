@@ -11,6 +11,7 @@ router.put("/:userId",
             auth(userRole.ADMIN, userRole.CUSTOMER), 
             ownerOrAdmin("userId"), 
             usersController.putUserbyId
-          )
+          );
+router.delete("/:userId", auth(userRole.ADMIN), usersController.deleteUserById);
 
 export const userRoutes = router;

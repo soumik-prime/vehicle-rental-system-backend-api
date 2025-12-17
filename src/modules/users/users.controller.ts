@@ -57,7 +57,50 @@ const putUserbyId = async(req: Request, res: Response) => {
   }
 }
 
+const deleteUserById = async(req: Request, res: Response) => {
+  try{
+    const bookingStatus = await usersService.getActiveBookingByCustomerId(req.params.userId as string);
+    if(bookingStatus.rowCount === 0){
+      const result = await usersService.deleteUserById(req.params.userId as string);
+      if(result.rowCount !== 0){
+        return res.status(200).json(
+          {
+            "success": true,
+            "message": "User deleted successfully"
+          }
+        )
+      }
+      else{
+        return res.status(404).json(
+          {
+            "success": false,
+            "message": "User not found"
+          }
+        )
+      }
+    }
+    else{
+      return res.status(400).json(
+        {
+          "success": false,
+          "message": "User has active booking"
+        }
+      )
+    }
+  }
+  catch(err: any){
+    res.status(500).json(
+      {
+        success: false,
+        message: err.message,
+        error: err?.message ?? "Internal server error"
+      }
+    )
+  }
+}
+
 export const usersController = {
   getAllUser,
-  putUserbyId
+  putUserbyId,
+  deleteUserById
 }

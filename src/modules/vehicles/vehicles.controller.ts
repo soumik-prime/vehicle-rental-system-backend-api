@@ -5,12 +5,12 @@ import { vehiclesService } from './vehicles.service';
 const createVehicle = async(req: Request, res: Response) => {
   try{
     const result = await vehiclesService.createVehicle(req.body);
-    if(result){
+    if(result?.rows[0]){
       res.status(201).json(
         {
           success: true,
           message: "Vehicle created successfully",
-          data: result
+          data: result.rows[0]
         }
       )
     }
@@ -47,7 +47,7 @@ const getVehicles = async(req: Request, res: Response) => {
       )
     }
     else{
-      res.status(200).json(
+      res.status(404).json(
         {
           success: false,
           message: "No vehicles found",
@@ -134,9 +134,41 @@ const putVehicleById = async(req: Request, res: Response) => {
   }
 }
 
+const deleteVehicleById = async(req: Request, res: Response) => {
+  try{
+    const result = await vehiclesService.deleteVehicleById(req.params.vehicleId as string);
+    if(result.rowCount !== 0){
+      return res.status(200).json(
+        {
+          success: true,
+          message: "Vehicle deleted successfully"
+        }
+      )
+    }
+    else{
+      return res.status(400).json(
+        {
+          success: false,
+          message: "Vehicle not found or already booked"
+        }
+      )
+    }
+  }
+  catch(err: any){
+    res.status(500).json(
+      {
+        success: false,
+        message: err.message,
+        error: err?.message ?? "Internal server error"
+      }
+    )
+  }
+}
+
 export const vehiclesController = {
   createVehicle,
   getVehicles,
   getVehicleById,
-  putVehicleById
+  putVehicleById,
+  deleteVehicleById
 };

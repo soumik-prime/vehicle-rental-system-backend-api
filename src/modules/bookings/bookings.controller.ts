@@ -5,9 +5,18 @@ import { userRole } from '../../types/auth/enum';
 const createBooking = async(req: Request, res: Response) => {
   try{
     const result = await bookingsService.createBooking(req.body, "active");
-    // console.log("Point: 1", result);
+    console.log("Point: 1", result);
+    if(!result){
+      return res.status(400).json(
+        {
+          success: false,
+          message: "Vehicles is already booked"
+        }
+      )
+    }
     const newResult = await bookingsService.getBookingById(result.id);
-    console.log(newResult);
+    await bookingsService.updateVehicleAvailStatus(newResult.vehicle_id, "booked");
+    // console.log(newResult);
     return res.status(201).json({
       success: true,
       message: "Booking created successfully",
@@ -24,7 +33,7 @@ const createBooking = async(req: Request, res: Response) => {
           daily_rent_price: newResult.daily_rent_price
         }
       }
-    })
+    });
 
   }
   catch(err: any){
@@ -130,6 +139,7 @@ const updateBookingStatus = async(req: Request, res: Response) => {
     if(req.user.role === userRole.ADMIN && status === "returned"){
       const result = await bookingsService.updateBookingStatus(req.params.bookingId as string, status);
       if(result){
+        const vehicle = await bookingsService.updateVehicleAvailStatus(result.vehicle_id, "available");
         return res.status(200).json(
           {
             "success": true,
@@ -143,7 +153,7 @@ const updateBookingStatus = async(req: Request, res: Response) => {
               total_price: result.total_price,
               status: result.status,
               "vehicle": {
-                availability_status: "available"
+                availability_status: vehicle.availability_status
               }
             }
           }
@@ -163,6 +173,7 @@ const updateBookingStatus = async(req: Request, res: Response) => {
     if(req.user.role === userRole.CUSTOMER && status === "cancelled"){
       const result = await bookingsService.updateBookingStatus(req.params.bookingId as string, status);
       if(result){
+        await bookingsService.updateVehicleAvailStatus(result.vehicle_id, "available");
         return res.status(200).json(
           {
             "success": true,
